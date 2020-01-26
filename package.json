@@ -1,0 +1,32 @@
+{
+  "name": "newman-reporter-influxdb",
+  "version": "1.0.0",
+  "description": "Newman Reporter for InfluxDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vs4vijay/newman-reporter-influxdb.git"
+  },
+  "keywords": [
+    "newman",
+    "reporter",
+    "influxdb",
+    "postman",
+    "api",
+    "api testing",
+    "testing",
+    "test"
+  ],
+  "author": "Vijay Soni (vs4vijay@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vs4vijay/newman-reporter-influxdb/issues"
+  },
+  "homepage": "https://github.com/vs4vijay/newman-reporter-influxdb#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
