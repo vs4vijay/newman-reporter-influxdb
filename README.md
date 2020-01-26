@@ -5,7 +5,7 @@
 ## Running
 
 ```bash
-newman run <collection-url> -r csv --reporter-influxdb-server <server-ip> --reporter-influxdb-port <server-port> --reporter-influxdb-name <database-name> --reporter-influxdb-measurement <measurement-name>
+`newman run <collection-url> -r csv --reporter-influxdb-server <server-ip> --reporter-influxdb-port <server-port> --reporter-influxdb-name <database-name> --reporter-influxdb-measurement <measurement-name>`
 ```
 
 Example:
