@@ -1,21 +1,25 @@
 # newman-reporter-influxdb
 
----
-
 ## Running
 
-`newman run <collection-url> -r csv --reporter-influxdb-server <server-ip> --reporter-influxdb-port <server-port> --reporter-influxdb-name <database-name> --reporter-influxdb-measurement <measurement-name>`
+Specify `-r influxdb` option while running the collection
+
+`newman run <collection-url> -r influxdb --reporter-influxdb-server <server-ip> --reporter-influxdb-port <server-port> --reporter-influxdb-name <database-name> --reporter-influxdb-measurement <measurement-name>`
 
 Example:
 
-`newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r csv --reporter-influxdb-server localhost --reporter-influxdb-port 8086 --reporter-influxdb-name api_results`
+`newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb --reporter-influxdb-server localhost --reporter-influxdb-port 8086 --reporter-influxdb-name api_results`
 
-Optional Arguments:
+Arguments:
 
 **Argument** | **Remarks**
 --- | --- 
---reporter-influxdb-username | newman_user
---reporter-influxdb-password | p@ssw0rd
+--reporter-influxdb-server | IP Address or Host of InfluxDB
+--reporter-influxdb-port | Port no. (Usually `8086`)
+--reporter-influxdb-name | Database name
+--reporter-influxdb-measurement | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
+--reporter-influxdb-username (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
+--reporter-influxdb-password (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
 
 ---
 

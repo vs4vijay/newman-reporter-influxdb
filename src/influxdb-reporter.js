@@ -28,6 +28,9 @@ class InfluxDBReporter {
     if (!this.reporterOptions.influxdbName) {
       throw new Error('[-] ERROR: Database Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
+    if (!this.reporterOptions.influxdbMeasurement) {
+      this.reporterOptions.influxdbMeasurement = `newman_results-${new Date().getTime()}`;
+    }
     // this.stream = new SimpleUdpStream({
     //   destination: this.reporterOptions.influxdbServer,
     //   port: this.reporterOptions.influxdbPort
@@ -119,11 +122,7 @@ class InfluxDBReporter {
 
   async healthCheck() {
     let connectionUrl = this.buildInfluxDBUrl('ping');
-
-    connectionUrl = 'http://192.168.100.40:8086/ping';
-    connectionUrl = 'http://localhost:8086/ping';
-    // connectionUrl = 'http://vijay.requestcatcher.com/';
-
+    
     try {
       const data = await axios.get(connectionUrl);
     } catch (error) {
@@ -132,7 +131,7 @@ class InfluxDBReporter {
   }
 
   buildPayload(data) {
-    const measurementName = this.reporterOptions.measurement || `newman_results-${new Date().getTime()}`;
+    const measurementName = this.reporterOptions.influxdbMeasurement;
     let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: str => str.replace(/ /g, '_') });
     binaryData = `${measurementName},${binaryData} value=${data.responseTime}`;
     return binaryData;
@@ -141,8 +140,8 @@ class InfluxDBReporter {
   async sendDataHTTP(data) {
     let connectionUrl = this.buildInfluxDBUrl();
 
-    connectionUrl = 'http://192.168.100.40:8086/write?db=code';
-    connectionUrl = 'http://localhost:8086/write?db=code';
+    // connectionUrl = 'http://192.168.100.40:8086/write?db=code';
+    // connectionUrl = 'http://localhost:8086/write?db=code';
     // connectionUrl = 'http://vijay.requestcatcher.com/';
 
     try {
