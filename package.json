@@ -1,6 +1,6 @@
 {
   "name": "newman-reporter-influxdb",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Newman Reporter for InfluxDB",
   "main": "index.js",
   "scripts": {

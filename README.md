@@ -35,7 +35,7 @@ Arguments:
 
 ---
 
-### Development Notes
+## To Do
 
 - [x] Convert to ES6 based version
 - [ ] Folder Structure
@@ -45,3 +45,13 @@ Arguments:
 - [ ] ESLint
 - [ ] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
+
+---
+
+### Development Notes
+
+```
+
+npm publish --access public
+
+```
