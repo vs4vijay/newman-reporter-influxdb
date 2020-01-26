@@ -10,9 +10,7 @@ newman run <collection-url> -r csv --reporter-influxdb-server <server-ip> --repo
 
 Example:
 
-```bash
-newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r csv --reporter-influxdb-server localhost --reporter-influxdb-port 8086 --reporter-influxdb-name api_results
-```
+`newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r csv --reporter-influxdb-server localhost --reporter-influxdb-port 8086 --reporter-influxdb-name api_results`
 
 Optional Arguments:
 
