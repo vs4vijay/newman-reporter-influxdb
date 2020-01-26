@@ -4,11 +4,23 @@
 
 Specify `-r influxdb` option while running the collection
 
-`newman run <collection-url> -r influxdb --reporter-influxdb-server <server-ip> --reporter-influxdb-port <server-port> --reporter-influxdb-name <database-name> --reporter-influxdb-measurement <measurement-name>`
+```bash
+newman run <collection-url> -r influxdb \
+  --reporter-influxdb-server <server-ip> \
+  --reporter-influxdb-port <server-port> \
+  --reporter-influxdb-name <database-name> \
+  --reporter-influxdb-measurement <measurement-name>
+```
 
 Example:
 
-`newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb --reporter-influxdb-server localhost --reporter-influxdb-port 8086 --reporter-influxdb-name api_results`
+```
+newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb \
+--reporter-influxdb-server localhost \
+--reporter-influxdb-port 8086 \
+--reporter-influxdb-name newman_reports \
+--reporter-influxdb-measurement api_results
+```
 
 Arguments:
 

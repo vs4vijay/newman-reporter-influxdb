@@ -29,7 +29,7 @@ class InfluxDBReporter {
       throw new Error('[-] ERROR: Database Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
     if (!this.reporterOptions.influxdbMeasurement) {
-      this.reporterOptions.influxdbMeasurement = `newman_results-${new Date().getTime()}`;
+      this.reporterOptions.influxdbMeasurement = `api_results-${new Date().getTime()}`;
     }
     // this.stream = new SimpleUdpStream({
     //   destination: this.reporterOptions.influxdbServer,
@@ -122,7 +122,7 @@ class InfluxDBReporter {
 
   async healthCheck() {
     let connectionUrl = this.buildInfluxDBUrl('ping');
-    
+
     try {
       const data = await axios.get(connectionUrl);
     } catch (error) {
