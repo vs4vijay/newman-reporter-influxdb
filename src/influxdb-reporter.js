@@ -3,6 +3,8 @@
 const querystring = require('querystring');
 const axios = require('axios');
 
+const HttpService = require('./http.service');
+
 
 class InfluxDBReporter {
   
@@ -13,7 +15,7 @@ class InfluxDBReporter {
     this.context = {
       id: `${new Date().getTime()}-${Math.random()}`,
       currentItem: { index: 0 }
-    }
+    };
     const events = 'start iteration item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
@@ -44,6 +46,7 @@ class InfluxDBReporter {
     //   destination: this.reporterOptions.influxdbServer,
     //   port: this.reporterOptions.influxdbPort
     // });
+    this.service = new HttpService(this.context);
     console.log(`Starting: ${this.context.id}`);
   }
 
@@ -99,7 +102,7 @@ class InfluxDBReporter {
     const binaryData = this.buildPayload(this.context.currentItem.data);
     // console.log('binaryData', binaryData);
 
-    this.sendDataHTTP(binaryData);
+    this.service.sendData(binaryData);
   }
 
   done() {
@@ -115,29 +118,6 @@ class InfluxDBReporter {
   }
 
   /// Private method starts here
-  buildInfluxDBUrl(path='write') {
-    const url = `http://${this.context.server}:${this.context.port}/${path}`;
-    const params = {
-      db: this.context.name,
-      u: this.context.username,
-      p: this.context.password,
-    }
-
-    const paramsQuerystring = querystring.stringify(params);
-
-    const connectionUrl = `${url}?${paramsQuerystring}`;
-    return connectionUrl;
-  }
-
-  async healthCheck() {
-    let connectionUrl = this.buildInfluxDBUrl('ping');
-
-    try {
-      const data = await axios.get(connectionUrl);
-    } catch (error) {
-      console.log('[-] ERROR: not able to connect to influxdb', error);
-    }
-  }
 
   buildPayload(data) {
     const measurementName = this.context.measurement;
@@ -145,16 +125,7 @@ class InfluxDBReporter {
     binaryData = `${measurementName},${binaryData} value=${data.response_time}`;
     return binaryData;
   }
-
-  async sendDataHTTP(data) {
-    let connectionUrl = this.buildInfluxDBUrl();
-
-    try {
-      await axios.post(connectionUrl, data);
-    } catch (error) {
-      console.log('[-] ERROR: while sending data to influxdb', error);
-    }
-  }
+  
 };
 
 module.exports = InfluxDBReporter;
