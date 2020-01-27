@@ -2,6 +2,13 @@
 
 InfluxDB reporter for [Newman](https://github.com/postmanlabs/newman) that sends the test results information to InfluxDB which can be used from Grafana to build dashboard.
 
+<a href="https://www.npmjs.com/package/newman-reporter-influxdb">
+  <img alt="npm version" src="https://img.shields.io/npm/v/newman-reporter-influxdb.svg">
+  <img alt="npm downloads" src="https://img.shields.io/npm/dm/newman-reporter-influxdb.svg">
+  <img alt="code license" src="https://img.shields.io/github/license/vs4vijay/newman-reporter-influxdb">
+  <img alt="npm publish" src="https://github.com/vs4vijay/newman-reporter-influxdb/workflows/npm publish/badge.svg">
+</a>
+
 ## Getting Started
 
 1. Install `newman`
@@ -79,7 +86,7 @@ v1.0.0+ | v1.7
 - [x] Username and Password support
 - [ ] Include UDP Reporter as well
 - [ ] Add batch operation
-- [ ] ESLint
+- [ ] ESLint / StandardJS
 - [x] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
 
@@ -124,5 +131,12 @@ PACKAGE_VERSION=$(cat package.json \
 echo $PACKAGE_VERSION
 
 https://github.com/influxdata/influxdb/blob/1.7/services/udp/README.md
+
+https://img.shields.io/npm/v/newman-reporter-influxdb.svg
+
+<a href="https://www.npmjs.com/package/newman-reporter-influxdb"><img src="https://img.shields.io/npm/v/newman-reporter-influxdb.svg" alt="npm version"></a>
+<a href="https://www.npmjs.com/package/newman-reporter-influxdb"><img src="https://img.shields.io/npm/dm/newman-reporter-influxdb.svg" alt="npm downloads"></a>
+
+<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/vs4vijay/newman-reporter-influxdb/total">
 
 ```
