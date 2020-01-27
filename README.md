@@ -63,9 +63,9 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 
 ## Compatibility
 
-| **newman-reporter-influxdb** | **InfluxDB** |
-|:------------------------:|:----------:|
-|          v1.0.0+         |    v1.7    |
+**newman-reporter-influxdb** | **InfluxDB**
+--- | ---
+v1.0.0+ | v1.7
 
 #### Notes:
 - This reporter currently uses InfluxDB HTTP APIs to send data
@@ -80,7 +80,7 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 - [ ] Include UDP Reporter as well
 - [ ] Add batch operation
 - [ ] ESLint
-- [ ] CI/CD with Github Actions
+- [x] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
 
 ---
