@@ -44,6 +44,10 @@ class HttpService {
     }
   }
 
+  close() {
+    
+  }
+
 };
 
 module.exports = HttpService;

@@ -65,6 +65,7 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 `--reporter-influxdb-measurement` | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
 `--reporter-influxdb-username` (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
 `--reporter-influxdb-password` (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
+`--reporter-influxdb-mode` | Transmission Mode `http`, `udp` (default: `http`)
 
 ---
 
@@ -82,9 +83,9 @@ v1.0.0+ | v1.7
 ## To Do
 
 - [x] Convert to ES6 based version
-- [ ] Folder Structure
+- [x] Folder Structure
 - [x] Username and Password support
-- [ ] Include UDP Reporter as well
+- [x] Include UDP Reporter as well
 - [ ] Add batch operation
 - [ ] ESLint / StandardJS
 - [x] CI/CD with Github Actions
@@ -130,13 +131,36 @@ PACKAGE_VERSION=$(cat package.json \
 
 echo $PACKAGE_VERSION
 
-https://github.com/influxdata/influxdb/blob/1.7/services/udp/README.md
-
 https://img.shields.io/npm/v/newman-reporter-influxdb.svg
 
 <a href="https://www.npmjs.com/package/newman-reporter-influxdb"><img src="https://img.shields.io/npm/v/newman-reporter-influxdb.svg" alt="npm version"></a>
 <a href="https://www.npmjs.com/package/newman-reporter-influxdb"><img src="https://img.shields.io/npm/dm/newman-reporter-influxdb.svg" alt="npm downloads"></a>
 
 <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/vs4vijay/newman-reporter-influxdb/total">
+
+
+
+https://github.com/influxdata/influxdb/blob/1.7/services/udp/README.md
+https://docs.influxdata.com/influxdb/v1.7/supported_protocols/udp/
+
+
+[udp]
+  enabled = true
+  bind-address = ":8086"
+  database = "newman_reports_udp"
+  batch-size = 1000
+  batch-timeout = “1s”
+
+
+To write, just send newline separated line protocol over UDP.  Can send one point at a time (not very performant) or send batches.
+
+$ echo "newman_results value=1" > /dev/udp/localhost/8086
+$ echo "select * from newman_results" | influx -database newman_reports_udp
+Connected to http://localhost:8086 version 1.7
+InfluxDB shell 0.9
+name: newman_results
+---------
+time                value
+2020-26-06T11:25:15.321527811Z    1
 
 ```

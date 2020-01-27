@@ -4,6 +4,7 @@ const querystring = require('querystring');
 const axios = require('axios');
 
 const HttpService = require('./http.service');
+const UdpService = require('./udp.service');
 
 
 class InfluxDBReporter {
@@ -29,6 +30,7 @@ class InfluxDBReporter {
     this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
     this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
     this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
+    this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
 
     if (!this.context.server) {
       throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
@@ -42,11 +44,12 @@ class InfluxDBReporter {
     if (!this.context.measurement) {
       this.context.measurement = `api_results-${new Date().getTime()}`;
     }
-    // this.stream = new SimpleUdpStream({
-    //   destination: this.reporterOptions.influxdbServer,
-    //   port: this.reporterOptions.influxdbPort
-    // });
-    this.service = new HttpService(this.context);
+    if (!this.context.mode) {
+      this.context.mode = 'http';
+    }
+
+    const DataService = this.context.mode === 'udp' ? UdpService : HttpService;
+    this.service = new DataService(this.context);
     console.log(`Starting: ${this.context.id}`);
   }
 
@@ -122,10 +125,10 @@ class InfluxDBReporter {
   buildPayload(data) {
     const measurementName = this.context.measurement;
     let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: str => str.replace(/ /g, '_') });
-    binaryData = `${measurementName},${binaryData} value=${data.response_time}`;
+    binaryData = `${measurementName},${binaryData} value=${data.response_time}\n`;
     return binaryData;
   }
-  
+
 };
 
 module.exports = InfluxDBReporter;
