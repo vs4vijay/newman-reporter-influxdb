@@ -1,5 +1,11 @@
 # newman-reporter-influxdb
 
+## Installation
+
+`npm install -g newman-reporter-influxdb`
+
+---
+
 ## Running
 
 Specify `-r influxdb` option while running the collection
@@ -48,10 +54,27 @@ Arguments:
 
 ---
 
+## Development
+
+- `npm pack`
+- `npm i -g newman-reporter-<name>.<version>.tgz`
+
+---
+
 ### Development Notes
 
 ```
 
 npm publish --access public
+
+- name: npm publish
+        run: |
+          LATEST=`npm view . version`
+          CURRENT=`cat package.json | jq -r .version`
+          if [ "$LATEST" != "$CURRENT" ]
+          then
+            npm ci
+            npm publish
+          fi
 
 ```

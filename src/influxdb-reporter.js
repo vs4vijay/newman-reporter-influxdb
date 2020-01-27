@@ -53,14 +53,14 @@ class InfluxDBReporter {
     console.log(`[+] Running ${item.name}`);
 
     const data = {
-      collectionName: this.options.collection.name, 
-      requestName: item.name,
+      collection_name: this.options.collection.name, 
+      request_name: item.name,
       url: request.url.toString(),
       method: request.method,
       status: args.response.status,
       code: args.response.code,
-      responseTime: args.response.responseTime,
-      responseSize: args.response.responseSize,
+      response_time: args.response.responseTime,
+      response_size: args.response.responseSize,
       // executed: 'EXECUTED',
       // failed: 'FAILED',
       // skipped: 'SKIPPED'
