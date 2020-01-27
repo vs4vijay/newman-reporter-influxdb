@@ -10,8 +10,10 @@ class InfluxDBReporter {
     this.newmanEmitter = newmanEmitter;
     this.reporterOptions = reporterOptions;
     this.options = options;
-    this.id = `${new Date().getTime()}-${Math.random()}`;
-    this.current = { index: 0 };
+    this.context = {
+      id: `${new Date().getTime()}-${Math.random()}`,
+      currentItem: { index: 0 }
+    }
     const events = 'start iteration item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
@@ -19,28 +21,35 @@ class InfluxDBReporter {
   }
 
   start(error, args) {
-    if (!this.reporterOptions.influxdbServer) {
-      throw new Error('[-] ERROR: Destination address is missing! Add --reporter-influxdb-server <server-address>.');
+    this.context.server = this.reporterOptions.influxdbServer || this.reporterOptions.server;
+    this.context.port = this.reporterOptions.influxdbPort || this.reporterOptions.port;
+    this.context.name = this.reporterOptions.influxdbName || this.reporterOptions.name;
+    this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
+    this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
+    this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
+
+    if (!this.context.server) {
+      throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
     }
-    if (!this.reporterOptions.influxdbPort) {
-      throw new Error('[-] ERROR: Port is missing! Add --reporter-influxdb-port <port-number>.');
+    if (!this.context.port) {
+      throw new Error('[-] ERROR: InfluxDB Server Port is missing! Add --reporter-influxdb-port <port-number>.');
     }
-    if (!this.reporterOptions.influxdbName) {
-      throw new Error('[-] ERROR: Database Name is missing! Add --reporter-influxdb-name <database-name>.');
+    if (!this.context.name) {
+      throw new Error('[-] ERROR: InfluxDB Database Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
-    if (!this.reporterOptions.influxdbMeasurement) {
-      this.reporterOptions.influxdbMeasurement = `api_results-${new Date().getTime()}`;
+    if (!this.context.measurement) {
+      this.context.measurement = `api_results-${new Date().getTime()}`;
     }
     // this.stream = new SimpleUdpStream({
     //   destination: this.reporterOptions.influxdbServer,
     //   port: this.reporterOptions.influxdbPort
     // });
-    console.log(`Starting: ${this.id}`);
+    console.log(`Starting: ${this.context.id}`);
   }
 
   beforeItem(error, args) {
-    this.current = {
-      index: (this.current.index + 1),
+    this.context.currentItem = {
+      index: (this.context.currentItem.index + 1),
       name: '',
       data: {},
       failedAssertions: []
@@ -66,8 +75,8 @@ class InfluxDBReporter {
       // skipped: 'SKIPPED'
     };
 
-    this.current.data = data;
-    this.current.name = item.name;
+    this.context.currentItem.data = data;
+    this.context.currentItem.name = item.name;
   }
 
   assertion(error, args) {
@@ -75,26 +84,26 @@ class InfluxDBReporter {
     // const result = error ? 'failed' : e.skipped ? 'skipped' : 'executed'
 
     if(error) {
-      this.current.data.failed = `FAILED: ${JSON.stringify(error)}`;
-      this.current.failedAssertions.push(assertion);
+      this.context.currentItem.data.failed = `FAILED: ${JSON.stringify(error)}`;
+      this.context.currentItem.failedAssertions.push(assertion);
     } else if(error && error.skipped) {
-      this.current.data.skipped = 'FAILED';
+      this.context.currentItem.data.skipped = 'FAILED';
     } else {
-      this.current.data.executed = 'EXECUTED';
+      this.context.currentItem.data.executed = 'EXECUTED';
     }
   }
 
   item(error, args) {
-    console.log(`[${this.current.index}] Processing ${this.current.name}`);
+    console.log(`[${this.context.currentItem.index}] Processing ${this.context.currentItem.name}`);
 
-    const binaryData = this.buildPayload(this.current.data);
+    const binaryData = this.buildPayload(this.context.currentItem.data);
     // console.log('binaryData', binaryData);
 
     this.sendDataHTTP(binaryData);
   }
 
   done() {
-    console.log(`[+] Finished collection: ${this.options.collection.name} (${this.id}))`);
+    console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id}))`);
 
     // this.stream.write(payload);
     // this.stream.done();
@@ -107,11 +116,11 @@ class InfluxDBReporter {
 
   /// Private method starts here
   buildInfluxDBUrl(path='write') {
-    const url = `http://${this.reporterOptions.influxdbServer}:${this.reporterOptions.influxdbPort}/${path}`;
+    const url = `http://${this.context.server}:${this.context.port}/${path}`;
     const params = {
-      db: this.reporterOptions.influxdbName,
-      u: this.reporterOptions.influxdbUsername,
-      p: this.reporterOptions.influxdbPassword,
+      db: this.context.name,
+      u: this.context.username,
+      p: this.context.password,
     }
 
     const paramsQuerystring = querystring.stringify(params);
@@ -131,18 +140,14 @@ class InfluxDBReporter {
   }
 
   buildPayload(data) {
-    const measurementName = this.reporterOptions.influxdbMeasurement;
+    const measurementName = this.context.measurement;
     let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: str => str.replace(/ /g, '_') });
-    binaryData = `${measurementName},${binaryData} value=${data.responseTime}`;
+    binaryData = `${measurementName},${binaryData} value=${data.response_time}`;
     return binaryData;
   }
 
   async sendDataHTTP(data) {
     let connectionUrl = this.buildInfluxDBUrl();
-
-    // connectionUrl = 'http://192.168.100.40:8086/write?db=code';
-    // connectionUrl = 'http://localhost:8086/write?db=code';
-    // connectionUrl = 'http://vijay.requestcatcher.com/';
 
     try {
       await axios.post(connectionUrl, data);
