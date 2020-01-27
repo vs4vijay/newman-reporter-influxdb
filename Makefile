@@ -1,12 +1,17 @@
+PROJECT = "newman-reporter-influxdb"
 
+# .PHONY: version
+
+# version:
+#   npm version
 
 local-install:
-	npm uninstall -g newman-reporter-influxdb
+	npm uninstall -g ${PROJECT}
 	npm pack
-	npm install -g newman-reporter-influxdb-*.tgz
+	npm install -g ${PROJECT}-*.tgz
 
 bump:
-	npm version patch
+	npm version patch -m "Bumped to version %s"
 
 publish:
 	npm publish

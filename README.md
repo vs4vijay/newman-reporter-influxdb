@@ -1,12 +1,32 @@
 # newman-reporter-influxdb
 
-## Installation
+InfluxDB reporter for [Newman](https://github.com/postmanlabs/newman) that sends the test results information to InfluxDB which can be used from Grafana to build dashboard.
 
-`npm install -g newman-reporter-influxdb`
+## Getting Started
+
+1. Install `newman`
+2. Install `newman-reporter-influxdb`
+3. Install InfluxDB (Get the server address, port, database name, etc)
+
+### Prerequisites
+
+1. `node` and `npm`
+2. `newman` - `npm install -g newman`
+3. [InfluxDB](https://github.com/influxdata/influxdb)
 
 ---
 
-## Running
+## Installation
+
+```console
+npm install -g newman-reporter-influxdb
+```
+
+> Installation should be done globally if newman is installed globally, otherwise install without `-g` option
+
+---
+
+## Usage
 
 Specify `-r influxdb` option while running the collection
 
@@ -28,16 +48,27 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 --reporter-influxdb-measurement api_results
 ```
 
-Arguments:
+#### Options:
 
-**Argument** | **Remarks**
+**Option** | **Remarks**
 --- | --- 
---reporter-influxdb-server | IP Address or Host of InfluxDB
---reporter-influxdb-port | Port no. (Usually `8086`)
---reporter-influxdb-name | Database name
---reporter-influxdb-measurement | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
---reporter-influxdb-username (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
---reporter-influxdb-password (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
+`--reporter-influxdb-server` | IP Address or Host of InfluxDB
+`--reporter-influxdb-port` | Port no. (Usually `8086`)
+`--reporter-influxdb-name` | Database name
+`--reporter-influxdb-measurement` | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
+`--reporter-influxdb-username` (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
+`--reporter-influxdb-password` (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
+
+---
+
+## Compatibility
+
+| **newman-reporter-influxdb** | **InfluxDB** |
+|:------------------------:|:----------:|
+|          v1.0.0+         |    v1.7    |
+
+#### Notes:
+- This reporter currently uses InfluxDB HTTP APIs to send data
 
 ---
 
@@ -76,5 +107,20 @@ npm publish --access public
             npm ci
             npm publish
           fi
+
+{
+    "scripts": {
+        "postpublish" : "PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag $PACKAGE_VERSION && git push --tags"
+    }
+}
+
+PACKAGE_VERSION=$(cat package.json \
+  | grep version \
+  | head -1 \
+  | awk -F: '{ print $2 }' \
+  | sed 's/[",]//g' \
+  | tr -d '[[:space:]]')
+
+echo $PACKAGE_VERSION
 
 ```
