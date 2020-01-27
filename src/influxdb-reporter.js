@@ -17,7 +17,7 @@ class InfluxDBReporter {
     const events = 'start iteration item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
-    console.log('reporterOptions', reporterOptions);
+    console.log('[+] Reporter Options', reporterOptions);
   }
 
   start(error, args) {

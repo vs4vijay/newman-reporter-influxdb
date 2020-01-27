@@ -123,4 +123,6 @@ PACKAGE_VERSION=$(cat package.json \
 
 echo $PACKAGE_VERSION
 
+https://github.com/influxdata/influxdb/blob/1.7/services/udp/README.md
+
 ```
