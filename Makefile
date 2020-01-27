@@ -5,5 +5,8 @@ local-install:
 	npm pack
 	npm install -g newman-reporter-influxdb-*.tgz
 
+bump:
+	npm version patch
+
 publish:
 	npm publish
