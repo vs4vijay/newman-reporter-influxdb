@@ -90,6 +90,7 @@ v1.0.0+ | v1.7
 - [ ] ESLint / StandardJS
 - [x] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
+- [ ] Remove axios to make it lightweight
 
 ---
 
@@ -137,6 +138,10 @@ https://img.shields.io/npm/v/newman-reporter-influxdb.svg
 <a href="https://www.npmjs.com/package/newman-reporter-influxdb"><img src="https://img.shields.io/npm/dm/newman-reporter-influxdb.svg" alt="npm downloads"></a>
 
 <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/vs4vijay/newman-reporter-influxdb/total">
+
+
+https://nodejs.org/api/http.html#http_http_request_url_options_callback
+https://nodejs.dev/making-http-requests-with-nodejs
 
 
 

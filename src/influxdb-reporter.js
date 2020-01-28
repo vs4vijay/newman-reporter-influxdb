@@ -1,7 +1,6 @@
 'use strict';
 
 const querystring = require('querystring');
-const axios = require('axios');
 
 const HttpService = require('./http.service');
 const UdpService = require('./udp.service');
@@ -15,12 +14,18 @@ class InfluxDBReporter {
     this.options = options;
     this.context = {
       id: `${new Date().getTime()}-${Math.random()}`,
-      currentItem: { index: 0 }
+      currentItem: { index: 0 },
+      assertions: {
+        total: 0,
+        failed: [],
+        skipped: []
+      },
+      list: []
     };
-    const events = 'start iteration item script request test assertion console exception done'.split(' ');
+    const events = 'start iteration beforeItem item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
-    console.log('[+] Reporter Options', reporterOptions);
+    // console.log('[+] Reporter Options', reporterOptions);
   }
 
   start(error, args) {
@@ -42,7 +47,8 @@ class InfluxDBReporter {
       throw new Error('[-] ERROR: InfluxDB Database Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
     if (!this.context.measurement) {
-      this.context.measurement = `api_results-${new Date().getTime()}`;
+      // this.context.measurement = `api_results_${new Date().getTime()}`;
+      throw new Error('[-] ERROR: InfluxDB Measurement Name is missing! Add --reporter-influxdb-measurement <measurement-name>.');
     }
     if (!this.context.mode) {
       this.context.mode = 'http';
@@ -50,22 +56,27 @@ class InfluxDBReporter {
 
     const DataService = this.context.mode === 'udp' ? UdpService : HttpService;
     this.service = new DataService(this.context);
-    console.log(`Starting: ${this.context.id}`);
+    console.log(`Starting collection: ${this.options.collection.name} ${this.context.id}`);
   }
 
   beforeItem(error, args) {
+    // console.log('beforeItem');
+    // console.log('beforeItem error', error);
+    // console.log('beforeItem args', args);
+
+    this.context.list.push(this.context.currentItem);
+
     this.context.currentItem = {
       index: (this.context.currentItem.index + 1),
       name: '',
-      data: {},
-      failedAssertions: []
+      data: {}
     };
   }
 
   request(error, args) {
     const { cursor, item, request } = args;
 
-    console.log(`[+] Running ${item.name}`);
+    console.log(`[${this.context.currentItem.index}] Running ${item.name}`);
 
     const data = {
       collection_name: this.options.collection.name, 
@@ -76,32 +87,50 @@ class InfluxDBReporter {
       code: args.response.code,
       response_time: args.response.responseTime,
       response_size: args.response.responseSize,
-      // executed: 'EXECUTED',
-      // failed: 'FAILED',
-      // skipped: 'SKIPPED'
+      test_status: 'PASS',
+      assertions: 0,
+      failed_count: 0,
+      skipped_count: 0,
+      failed: [],
+      skipped: []
     };
 
     this.context.currentItem.data = data;
     this.context.currentItem.name = item.name;
   }
 
+  exception(error, args) {
+    // console.log('exception error', error);
+    // console.log('exception args', args);
+  }
+
   assertion(error, args) {
-    const { assertion } = args
-    // const result = error ? 'failed' : e.skipped ? 'skipped' : 'executed'
+    // console.log('assertion error', error);
+    // console.log('assertion args', args);
+    // console.log('assertion error', error);
+
+    this.context.currentItem.data.assertions++;
 
     if(error) {
-      this.context.currentItem.data.failed = `FAILED: ${JSON.stringify(error)}`;
-      this.context.currentItem.failedAssertions.push(assertion);
-    } else if(error && error.skipped) {
-      this.context.currentItem.data.skipped = 'FAILED';
-    } else {
-      this.context.currentItem.data.executed = 'EXECUTED';
+      this.context.currentItem.data.test_status = 'FAIL';
+
+      const failMessage = `${error.test} | ${error.name}: ${error.message}`;
+      this.context.currentItem.data.failed.push(failMessage);
+      this.context.currentItem.data.failed_count++;
+      this.context.assertions.failed.push(failMessage); // for debug only
+    } else if(args.skipped) {
+      if(this.context.currentItem.data.test_status !== 'FAIL') {
+        this.context.currentItem.data.test_status = 'SKIP';
+      }
+
+      const skipMessage = args.assertion;
+      this.context.currentItem.data.skipped.push(args.assertion);
+      this.context.currentItem.data.skipped_count++;
+      this.context.assertions.skipped.push(skipMessage); // for debug only
     }
   }
 
   item(error, args) {
-    console.log(`[${this.context.currentItem.index}] Processing ${this.context.currentItem.name}`);
-
     const binaryData = this.buildPayload(this.context.currentItem.data);
     // console.log('binaryData', binaryData);
 
@@ -109,7 +138,10 @@ class InfluxDBReporter {
   }
 
   done() {
-    console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id}))`);
+    console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id})`);
+
+    // console.log('this.context', this.context);
+    // console.log('this.options.collection', this.options.collection);
 
     // this.stream.write(payload);
     // this.stream.done();
@@ -124,9 +156,28 @@ class InfluxDBReporter {
 
   buildPayload(data) {
     const measurementName = this.context.measurement;
-    let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: str => str.replace(/ /g, '_') });
+
+    if(data.failed.length) {
+      data.failed = data.failed.join(',');
+    } else {
+      delete data.failed;
+    }
+
+    if(data.skipped.length) {
+      data.skipped = data.skipped.join(',');
+    } else {
+      delete data.skipped;
+    }
+
+    let binaryData = querystring.stringify(data, ',', '=', { encodeURIComponent: this._encodeURIComponent });
     binaryData = `${measurementName},${binaryData} value=${data.response_time}\n`;
     return binaryData;
+  }
+
+  _encodeURIComponent(str) {
+    return str.replace(/ /g, '\\ ')
+              .replace(/,/g, '\\,')
+              .replace(/=/g, '\\=');
   }
 
 };
