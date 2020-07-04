@@ -100,15 +100,10 @@ class InfluxDBReporter {
   }
 
   exception(error, args) {
-    // console.log('exception error', error);
-    // console.log('exception args', args);
+    // TODO: 
   }
 
   assertion(error, args) {
-    // console.log('assertion error', error);
-    // console.log('assertion args', args);
-    // console.log('assertion error', error);
-
     this.context.currentItem.data.assertions++;
 
     if(error) {

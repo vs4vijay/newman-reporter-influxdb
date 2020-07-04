@@ -30,7 +30,7 @@ class HttpService {
     try {
       const data = await axios.get(connectionUrl);
     } catch (error) {
-      console.log('[-] ERROR: not able to connect to influxdb', error);
+      console.log('[-] ERROR: not able to connect to InfluxDB', error);
     }
   }
 
@@ -40,7 +40,7 @@ class HttpService {
     try {
       await axios.post(connectionUrl, data);
     } catch (error) {
-      console.log('[-] ERROR: while sending data to influxdb', error);
+      console.log('[-] ERROR: while sending data to InfluxDB', error);
     }
   }
 

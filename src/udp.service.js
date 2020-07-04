@@ -24,7 +24,7 @@ class UdpService {
       });
 
     } catch (error) {
-      console.log('[-] ERROR: while sending data to influxdb', error);
+      console.log('[-] ERROR: while sending data to InfluxDB', error);
     }
   }
 
