@@ -58,6 +58,6 @@ jobs:
       #       npm publish --access public
       #     fi
       - run: npm ci
-      - run: npm publish --access public
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GH_PUBLISH_TOKEN}}
