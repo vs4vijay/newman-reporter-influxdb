@@ -31,6 +31,8 @@ class InfluxDBReporter {
   start(error, args) {
     this.context.server = this.reporterOptions.influxdbServer || this.reporterOptions.server;
     this.context.port = this.reporterOptions.influxdbPort || this.reporterOptions.port;
+    this.context.version = this.reporterOptions.influxdbVersion || this.reporterOptions.version || 1;
+    this.context.org = this.reporterOptions.influxdbOrg || this.reporterOptions.org;
     this.context.name = this.reporterOptions.influxdbName || this.reporterOptions.name;
     this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
     this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
@@ -43,8 +45,13 @@ class InfluxDBReporter {
     if (!this.context.port) {
       throw new Error('[-] ERROR: InfluxDB Server Port is missing! Add --reporter-influxdb-port <port-number>.');
     }
+    if(this.context.version == 2) {
+      if (!this.context.org) {
+        throw new Error('[-] ERROR: InfluxDB v2.x Org is missing! Add --reporter-influxdb-org <org-name>.');
+      }
+    }
     if (!this.context.name) {
-      throw new Error('[-] ERROR: InfluxDB Database Name is missing! Add --reporter-influxdb-name <database-name>.');
+      throw new Error('[-] ERROR: InfluxDB Database/Bucket Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
     if (!this.context.measurement) {
       // this.context.measurement = `api_results_${new Date().getTime()}`;

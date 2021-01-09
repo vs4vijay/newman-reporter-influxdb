@@ -48,10 +48,23 @@ newman run <collection-url> -r influxdb \
 Example:
 
 ```
+# For InfluxDB version 1.x
+
 newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb \
 --reporter-influxdb-server localhost \
 --reporter-influxdb-port 8086 \
 --reporter-influxdb-name newman_reports \
+--reporter-influxdb-measurement api_results
+
+# For InfluxDB version 2.x
+
+newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb \
+--reporter-influxdb-server localhost \
+--reporter-influxdb-port 8086 \
+--reporter-influxdb-version 2 \
+--reporter-influxdb-username viz \
+--reporter-influxdb-password db123456 \
+--reporter-influxdb-name viz \
 --reporter-influxdb-measurement api_results
 ```
 
@@ -76,7 +89,7 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 v1.0.0+ | v1.7
 
 #### Notes:
-- This reporter currently uses InfluxDB HTTP APIs to send data
+- This reporter currently uses InfluxDB HTTP APIs / TCP Protocol to send data
 
 ---
 
@@ -91,6 +104,7 @@ v1.0.0+ | v1.7
 - [x] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
 - [ ] Remove axios to make it lightweight
+- [ ] Compatibility with InfluxDB 2.x
 
 ---
 
@@ -98,6 +112,8 @@ v1.0.0+ | v1.7
 
 - `npm pack`
 - `npm i -g newman-reporter-<name>.<version>.tgz`
+- OR `make local-install`
+- `make test-v2`
 
 ---
 
