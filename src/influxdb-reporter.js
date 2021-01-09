@@ -60,10 +60,10 @@ class InfluxDBReporter {
     if (!this.context.mode) {
       this.context.mode = 'http';
     }
+    console.log(`[+] Starting collection: ${this.options.collection.name} ${this.context.id}`);
 
     const DataService = this.context.mode === 'udp' ? UdpService : HttpService;
     this.service = new DataService(this.context);
-    console.log(`Starting collection: ${this.options.collection.name} ${this.context.id}`);
   }
 
   beforeItem(error, args) {
@@ -140,6 +140,7 @@ class InfluxDBReporter {
   }
 
   done() {
+    this.service.disconnect();
     console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id})`);
 
     // console.log('this.context', this.context);

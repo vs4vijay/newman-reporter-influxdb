@@ -1,6 +1,6 @@
 # newman-reporter-influxdb
 
-InfluxDB reporter for [Newman](https://github.com/postmanlabs/newman) that sends the test results information to InfluxDB which can be used from Grafana to build dashboard.
+InfluxDB reporter for [Newman](https://github.com/postmanlabs/newman) that sends the test results information to InfluxDB (1.x, 2.x) which can be used from Grafana to build dashboard.
 
 <a href="https://www.npmjs.com/package/newman-reporter-influxdb">
   <img alt="npm version" src="https://img.shields.io/npm/v/newman-reporter-influxdb.svg">
@@ -45,6 +45,12 @@ newman run <collection-url> -r influxdb \
   --reporter-influxdb-measurement <measurement-name>
 ```
 
+- By default, reporter consider influxdb version 1.x (i.e 1.7, 1.8)
+- In case of InfluxDB version 2, specify version, org and bucket name as well
+  - `--reporter-influxdb-version 2`
+  - `--reporter-influxdb-org <org-name>`
+  - `--reporter-influxdb-name <bucket-name>`
+
 Example:
 
 ```
@@ -59,22 +65,26 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 # For InfluxDB version 2.x
 
 newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb \
---reporter-influxdb-server localhost \
---reporter-influxdb-port 8086 \
---reporter-influxdb-version 2 \
---reporter-influxdb-username viz \
---reporter-influxdb-password db123456 \
---reporter-influxdb-name viz \
---reporter-influxdb-measurement api_results
+  --reporter-influxdb-server localhost \
+  --reporter-influxdb-port 8086 \
+  --reporter-influxdb-org viz \
+  --reporter-influxdb-version 2 \
+  --reporter-influxdb-username viz \
+  --reporter-influxdb-password db123456 \
+  --reporter-influxdb-name viz \
+  --reporter-influxdb-measurement api_results
 ```
 
-#### Options:
+### Options:
 
 **Option** | **Remarks**
 --- | --- 
 `--reporter-influxdb-server` | IP Address or Host of InfluxDB
 `--reporter-influxdb-port` | Port no. (Usually `8086`)
-`--reporter-influxdb-name` | Database name
+`--reporter-influxdb-version` | InfluxDB Version (default `1`)
+`--reporter-influxdb-org` | InfluxDB Org (For InfluxDB version 2.x)
+`--reporter-influxdb-port` | Port no. (Usually `8086`)
+`--reporter-influxdb-name` | Database name (or Bucket name for InfluxDB version 2.x)
 `--reporter-influxdb-measurement` | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
 `--reporter-influxdb-username` (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
 `--reporter-influxdb-password` (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
@@ -87,6 +97,7 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 **newman-reporter-influxdb** | **InfluxDB**
 --- | ---
 v1.0.0+ | v1.7
+v2.0.0+ | v1.8, v2.x
 
 #### Notes:
 - This reporter currently uses InfluxDB HTTP APIs / TCP Protocol to send data
@@ -104,7 +115,8 @@ v1.0.0+ | v1.7
 - [x] CI/CD with Github Actions
 - [ ] HealthCheck to InfluxDB
 - [ ] Remove axios to make it lightweight
-- [ ] Compatibility with InfluxDB 2.x
+- [x] Compatibility with InfluxDB 2.x
+- [ ] Tests
 
 ---
 
@@ -113,7 +125,7 @@ v1.0.0+ | v1.7
 - `npm pack`
 - `npm i -g newman-reporter-<name>.<version>.tgz`
 - OR `make local-install`
-- `make test-v2`
+- `make test-v1` / `make test-v2`
 
 ---
 
@@ -183,5 +195,11 @@ name: newman_results
 ---------
 time                value
 2020-26-06T11:25:15.321527811Z    1
+
+curl -G http://localhost:8086/query --data-urlencode "q=CREATE DATABASE newman_reports"
+
+docker run --name influxdb-1.7 -p 8086:8086 influxdb:1.7
+docker run --name influxdb-1.8 -p 8086:8086 influxdb:1.8
+docker run --name influxdb-2 -p 8086:8086 quay.io/influxdb/influxdb:v2.0.3
 
 ```

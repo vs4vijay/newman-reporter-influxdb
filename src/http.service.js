@@ -23,7 +23,7 @@ class HttpService {
     this.client = axios.create(axiosOptions);
 
     if(this.context.version == 2) {
-      this.signIn().then(console.log);
+      this.signIn();
     }
   }
 
@@ -52,6 +52,7 @@ class HttpService {
   }
 
   async signOut() {
+    console.log('[+] Signing Out from InfluxDB');
     try {
       await this.client.post('/api/v2/signout');
     } catch (error) {
@@ -97,10 +98,9 @@ class HttpService {
     }
   }
 
-  close() {
+  disconnect() {
     if(this.context.version == 2) {
-      console.log('[+] Signing Out from InfluxDB');
-      this.signOut().then(console.log);
+      this.signOut();
     }
   }
 
