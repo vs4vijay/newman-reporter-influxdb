@@ -25,7 +25,9 @@ class InfluxDBReporter {
     const events = 'start iteration beforeItem item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
-    // console.log('[+] Reporter Options', reporterOptions);
+    if (this.reporterOptions.debug) {
+      console.log('[+] Reporter Options', reporterOptions);
+    }
   }
 
   start(error, args) {
@@ -116,10 +118,15 @@ class InfluxDBReporter {
     if(error) {
       this.context.currentItem.data.test_status = 'FAIL';
 
-      const failMessage = `${error.test} | ${error.name}: ${error.message}`;
+      var failMessage = `${error.test} | ${error.name}`;
+      if (this.reporterOptions.debug) {
+        failMessage += `: ${error.message}`;
+      }
       this.context.currentItem.data.failed.push(failMessage);
       this.context.currentItem.data.failed_count++;
-      this.context.assertions.failed.push(failMessage); // for debug only
+      if (this.reporterOptions.debug) {
+        this.context.assertions.failed.push(failMessage);
+      }
     } else if(args.skipped) {
       if(this.context.currentItem.data.test_status !== 'FAIL') {
         this.context.currentItem.data.test_status = 'SKIP';
@@ -128,31 +135,20 @@ class InfluxDBReporter {
       const skipMessage = args.assertion;
       this.context.currentItem.data.skipped.push(args.assertion);
       this.context.currentItem.data.skipped_count++;
-      this.context.assertions.skipped.push(skipMessage); // for debug only
+      if (this.reporterOptions.debug) {
+        this.context.assertions.skipped.push(skipMessage); 
+      }
     }
   }
 
   item(error, args) {
     const binaryData = this.buildPayload(this.context.currentItem.data);
-    // console.log('binaryData', binaryData);
-
     this.service.sendData(binaryData);
   }
 
   done() {
     this.service.disconnect();
     console.log(`[+] Finished collection: ${this.options.collection.name} (${this.context.id})`);
-
-    // console.log('this.context', this.context);
-    // console.log('this.options.collection', this.options.collection);
-
-    // this.stream.write(payload);
-    // this.stream.done();
-
-    // this.exports.push({
-    //   name: 'newman-reporter-influxdb',
-    //   options: reporterOptions
-    // });
   }
 
   /// Private method starts here
