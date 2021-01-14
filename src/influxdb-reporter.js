@@ -21,8 +21,9 @@ class InfluxDBReporter {
         skipped: []
       },
       list: [],
-      debug: this.reporterOptions.debug
+      debug = this.reporterOptions.influxdbDebug || this.reporterOptions.debug || false
     };
+
     const events = 'start iteration beforeItem item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
@@ -57,7 +58,6 @@ class InfluxDBReporter {
       throw new Error('[-] ERROR: InfluxDB Database/Bucket Name is missing! Add --reporter-influxdb-name <database-name>.');
     }
     if (!this.context.measurement) {
-      // this.context.measurement = `api_results_${new Date().getTime()}`;
       throw new Error('[-] ERROR: InfluxDB Measurement Name is missing! Add --reporter-influxdb-measurement <measurement-name>.');
     }
     if (!this.context.mode) {
@@ -119,7 +119,7 @@ class InfluxDBReporter {
     if(error) {
       this.context.currentItem.data.test_status = 'FAIL';
 
-      var failMessage = `${error.test} | ${error.name}`;
+      let failMessage = `${error.test} | ${error.name}`;
       if (this.context.debug) {
         failMessage += `: ${error.message}`;
       }
