@@ -21,7 +21,7 @@ class InfluxDBReporter {
         skipped: []
       },
       list: [],
-      debug = this.reporterOptions.influxdbDebug || this.reporterOptions.debug || false
+      debug: false
     };
 
     const events = 'start iteration beforeItem item script request test assertion console exception done'.split(' ');
@@ -42,6 +42,8 @@ class InfluxDBReporter {
     this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
     this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
     this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
+    this.context.debug = this.reporterOptions.influxdbDebug || this.reporterOptions.debug || false;
+    this.context.debug = this.context.debug === 'true';
 
     if (!this.context.server) {
       throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
