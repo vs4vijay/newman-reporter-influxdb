@@ -12,9 +12,7 @@ class UdpService {
 
   async sendData(data) {
     try {
-      
       this.socket.send(data, this.context.port, this.context.address, (error, response) => {
-
         if(error) {
           console.log('udp error', error);
           throw error;
@@ -22,16 +20,14 @@ class UdpService {
 
         console.log('udp response', response);
       });
-
     } catch (error) {
-      console.log('[-] ERROR: while sending data to InfluxDB', error);
+      console.log('[-] ERROR: while sending data to InfluxDB', this.context.debug ? error : error.message);
     }
   }
 
   close() {
     this.socket.close();
   }
-
 };
 
 module.exports = UdpService;

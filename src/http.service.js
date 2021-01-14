@@ -47,7 +47,7 @@ class HttpService {
       const res = await this.client.post('/api/v2/signin');
       this.client.defaults.headers.common['cookie'] = res.headers['set-cookie'];
     } catch (error) {
-      console.log('[-] ERROR: while signing in to InfluxDB', error);
+      console.log('[-] ERROR: while signing in to InfluxDB', this.context.debug ? error : error.message);
     }
   }
 
@@ -56,7 +56,7 @@ class HttpService {
     try {
       await this.client.post('/api/v2/signout');
     } catch (error) {
-      console.log('[-] ERROR: while signing out to InfluxDB', error);
+      console.log('[-] ERROR: while signing out to InfluxDB', this.context.debug ? error : error.message);
     }
   }
 
@@ -66,7 +66,7 @@ class HttpService {
     try {
       const data = await axios.get(connectionUrl);
     } catch (error) {
-      console.log('[-] ERROR: not able to connect to InfluxDB', error);
+      console.log('[-] ERROR: not able to connect to InfluxDB', this.context.debug ? error : error.message);
     }
   }
 
@@ -94,7 +94,7 @@ class HttpService {
     try {
       await this.client.post(url, data);
     } catch (error) {
-      console.log('[-] ERROR: while sending data to InfluxDB', error);
+      console.log('[-] ERROR: while sending data to InfluxDB', this.context.debug ? error : error.message);
     }
   }
 
@@ -103,7 +103,6 @@ class HttpService {
       this.signOut();
     }
   }
-
 };
 
 module.exports = HttpService;
