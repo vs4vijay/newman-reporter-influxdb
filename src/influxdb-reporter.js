@@ -20,12 +20,13 @@ class InfluxDBReporter {
         failed: [],
         skipped: []
       },
-      list: []
+      list: [],
+      debug: this.reporterOptions.debug
     };
     const events = 'start iteration beforeItem item script request test assertion console exception done'.split(' ');
     events.forEach((e) => { if (typeof this[e] == 'function') newmanEmitter.on(e, (err, args) => this[e](err, args)) });
 
-    if (this.reporterOptions.debug) {
+    if (this.context.debug) {
       console.log('[+] Reporter Options', reporterOptions);
     }
   }
@@ -119,12 +120,12 @@ class InfluxDBReporter {
       this.context.currentItem.data.test_status = 'FAIL';
 
       var failMessage = `${error.test} | ${error.name}`;
-      if (this.reporterOptions.debug) {
+      if (this.context.debug) {
         failMessage += `: ${error.message}`;
       }
       this.context.currentItem.data.failed.push(failMessage);
       this.context.currentItem.data.failed_count++;
-      if (this.reporterOptions.debug) {
+      if (this.context.debug) {
         this.context.assertions.failed.push(failMessage);
       }
     } else if(args.skipped) {
@@ -135,7 +136,7 @@ class InfluxDBReporter {
       const skipMessage = args.assertion;
       this.context.currentItem.data.skipped.push(args.assertion);
       this.context.currentItem.data.skipped_count++;
-      if (this.reporterOptions.debug) {
+      if (this.context.debug) {
         this.context.assertions.skipped.push(skipMessage); 
       }
     }
@@ -178,7 +179,6 @@ class InfluxDBReporter {
               .replace(/,/g, '\\,')
               .replace(/=/g, '\\=');
   }
-
 };
 
 module.exports = InfluxDBReporter;
