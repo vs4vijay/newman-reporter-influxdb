@@ -25,6 +25,18 @@ test-v2:
 		--reporter-influxdb-name viz \
 		--reporter-influxdb-measurement api_results
 
+test-debug:
+	newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv -r influxdb \
+		--reporter-influxdb-server localhost \
+		--reporter-influxdb-port 8086 \
+		--reporter-influxdb-org viz \
+		--reporter-influxdb-version 2 \
+		--reporter-influxdb-username viz \
+		--reporter-influxdb-password db123456 \
+		--reporter-influxdb-name viz \
+		--reporter-influxdb-measurement api_results \
+		--reporter-influxdb-debug true
+
 test-failed:
 	newman run test/failed.json -r influxdb \
 		--reporter-influxdb-server localhost \
