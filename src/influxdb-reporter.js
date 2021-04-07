@@ -42,6 +42,7 @@ class InfluxDBReporter {
     this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
     this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
     this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
+    this.context.identifier = this.reporterOptions.influxdbIdentifier || this.reporterOptions.identifier;
     this.context.debug = this.reporterOptions.influxdbDebug || this.reporterOptions.debug || false;
     this.context.debug = this.context.debug === 'true';
 
@@ -92,6 +93,7 @@ class InfluxDBReporter {
 
     const data = {
       collection_name: this.options.collection.name, 
+      id: this.context.identifier,
       request_name: item.name,
       url: request.url.toString(),
       method: request.method,
