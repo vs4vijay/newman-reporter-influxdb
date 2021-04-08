@@ -9,7 +9,7 @@ class HttpService {
   constructor(context) {
     this.context = context;
     const axiosOptions = {
-      baseURL: `http://${this.context.server}:${this.context.port}`
+      baseURL: `${this.context.mode === "https" ? "https" : "http"}://${this.context.server}:${this.context.port}`
     };
 
     if(this.context.version == 2) {
