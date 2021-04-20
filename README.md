@@ -81,15 +81,16 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 --- | --- 
 `--reporter-influxdb-server` | IP Address or Host of InfluxDB
 `--reporter-influxdb-port` | Port no. (Usually `8086`)
-`--reporter-influxdb-version` | InfluxDB Version (default `1`)
+`--reporter-influxdb-version` | InfluxDB Version `1`, `2` (default `1`)
 `--reporter-influxdb-org` | InfluxDB Org (For InfluxDB version 2.x)
 `--reporter-influxdb-port` | Port no. (Usually `8086`)
 `--reporter-influxdb-name` | Database name (or Bucket name for InfluxDB version 2.x)
 `--reporter-influxdb-measurement` | Measurement Point name (If not provided, then reporter will create measurement with prefix `newman_results-<timestamp>`)
 `--reporter-influxdb-username` (*Optional*) | Username created for InfluxDB (e.g. `newman_user`)
 `--reporter-influxdb-password` (*Optional*) | Password of the user (e.g. `p@ssw0rd`)
-`--reporter-influxdb-mode` | Transmission Mode `http`, `udp` (default: `http`)
-`--reporter-debug` | Reporter debug mode (default: `false`)
+`--reporter-influxdb-identifier` (*Optional*) | An identifier to be passed to InfluxDB (default: `run-${Date.now()}`)
+`--reporter-influxdb-mode` | Transmission Mode `http`, `https`, `udp` (default: `http`)
+`--reporter-debug` | Enable debug mode (default: `false`)
 
 ---
 
@@ -111,6 +112,7 @@ v2.0.0+ | v1.8, v2.x
 - [x] Folder Structure
 - [x] Username and Password support
 - [x] Include UDP Reporter as well
+- [x] HTTPS Support
 - [ ] Add batch operation
 - [ ] ESLint / StandardJS
 - [x] CI/CD with Github Actions

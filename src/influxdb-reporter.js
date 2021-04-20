@@ -41,10 +41,9 @@ class InfluxDBReporter {
     this.context.measurement = this.reporterOptions.influxdbMeasurement || this.reporterOptions.measurement;
     this.context.username = this.reporterOptions.influxdbUsername || this.reporterOptions.username;
     this.context.password = this.reporterOptions.influxdbPassword || this.reporterOptions.password;
-    this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode;
-    this.context.identifier = this.reporterOptions.influxdbIdentifier || this.reporterOptions.identifier;
-    this.context.debug = this.reporterOptions.influxdbDebug || this.reporterOptions.debug || false;
-    this.context.debug = this.context.debug === 'true';
+    this.context.mode = this.reporterOptions.influxdbMode || this.reporterOptions.mode || 'http';
+    this.context.identifier = this.reporterOptions.influxdbIdentifier || this.reporterOptions.identifier || `run-${Date.now()}`;
+    this.context.debug = (this.reporterOptions.influxdbDebug || this.reporterOptions.debug) == 'true';
 
     if (!this.context.server) {
       throw new Error('[-] ERROR: InfluxDB Server Address is missing! Add --reporter-influxdb-server <server-address>.');
@@ -62,9 +61,6 @@ class InfluxDBReporter {
     }
     if (!this.context.measurement) {
       throw new Error('[-] ERROR: InfluxDB Measurement Name is missing! Add --reporter-influxdb-measurement <measurement-name>.');
-    }
-    if (!this.context.mode) {
-      this.context.mode = 'http';
     }
     console.log(`[+] Starting collection: ${this.options.collection.name} ${this.context.id}`);
 
