@@ -64,8 +64,9 @@ describe("InfluxDBReporter", () => {
   });
 
   describe("exception", () => {
-    it("does not throw any errors when called", () => {
-      expect(() => reporter.exception()).not.toThrow();
+    it("does not throw any errors when called with an error", () => {
+      const error = new Error("Test error");
+      expect(() => reporter.exception(error)).not.toThrow();
     });
   });
 
