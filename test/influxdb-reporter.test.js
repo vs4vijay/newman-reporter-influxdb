@@ -12,6 +12,18 @@ describe("InfluxDBReporter", () => {
     reporter = new InfluxDBReporter();
   });
 
+  describe("request", () => {
+    it("updates the current item's data correctly", () => {
+      const request = { /* some request */ };
+      reporter.request(null, request);
+      expect(reporter.context.currentItem.data).toEqual(request);
+    });
+  });
+
+  beforeEach(() => {
+    reporter = new InfluxDBReporter();
+  });
+
   describe("start", () => {
     it("sets up the context correctly", () => {
       const config = {
