@@ -80,7 +80,6 @@ describe("InfluxDBReporter", () => {
       expect(disconnect).toHaveBeenCalled();
     });
   });
-});
 
   beforeEach(() => {
     reporter = new InfluxDBReporter();
