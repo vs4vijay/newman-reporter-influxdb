@@ -14,20 +14,26 @@ describe("InfluxDBReporter", () => {
 
   describe("start", () => {
     it("sets up the context correctly", () => {
-      const config = { /* some configuration */ };
+      const config = {
+        /* some configuration */
+      };
       reporter.start(config);
       expect(reporter.context).toEqual(config);
     });
 
     it("throws an error when required parameters are missing", () => {
-      const config = { /* missing required parameters */ };
+      const config = {
+        /* missing required parameters */
+      };
       expect(() => reporter.start(config)).toThrow();
     });
   });
 
   describe("beforeItem", () => {
     it("updates the context correctly", () => {
-      const item = { /* some item */ };
+      const item = {
+        /* some item */
+      };
       reporter.beforeItem(null, { item });
       expect(reporter.context.currentItem).toBe(item);
     });
@@ -35,7 +41,9 @@ describe("InfluxDBReporter", () => {
 
   describe("request", () => {
     it("updates the current item's data correctly", () => {
-      const args = { /* some args */ };
+      const args = {
+        /* some args */
+      };
       reporter.request(null, args);
       expect(reporter.context.currentItem.data).toEqual(args);
     });
@@ -54,7 +62,9 @@ describe("InfluxDBReporter", () => {
     });
 
     it("handles failed and skipped assertions correctly", () => {
-      const error = { /* some error */ };
+      const error = {
+        /* some error */
+      };
       reporter.assertion(error, { skipped: false });
       expect(reporter.context.currentItem.data.failed_count).toBe(1);
       expect(reporter.context.currentItem.data.skipped_count).toBe(0);
@@ -67,7 +77,7 @@ describe("InfluxDBReporter", () => {
 
   describe("item", () => {
     it("sends data to the service correctly", () => {
-      const sendData = jest.spyOn(reporter.service, 'sendData');
+      const sendData = jest.spyOn(reporter.service, "sendData");
       reporter.item();
       expect(sendData).toHaveBeenCalled();
     });
@@ -75,7 +85,7 @@ describe("InfluxDBReporter", () => {
 
   describe("done", () => {
     it("disconnects the service correctly", () => {
-      const disconnect = jest.spyOn(reporter.service, 'disconnect');
+      const disconnect = jest.spyOn(reporter.service, "disconnect");
       reporter.done();
       expect(disconnect).toHaveBeenCalled();
     });
