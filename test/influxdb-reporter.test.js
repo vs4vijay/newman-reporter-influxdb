@@ -92,7 +92,9 @@ describe("InfluxDBReporter", () => {
 
   describe("item", () => {
     it("sends data to the service correctly", () => {
-      const item = { /* some item */ };
+      const item = {
+        /* some item */
+      };
       reporter.context.currentItem = item;
       const sendData = jest.spyOn(reporter.service, "sendData");
       reporter.item();
