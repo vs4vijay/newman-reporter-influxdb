@@ -14,7 +14,9 @@ describe("InfluxDBReporter", () => {
 
   describe("request", () => {
     it("updates the current item's data correctly", () => {
-      const request = { /* some request */ };
+      const request = {
+        /* some request */
+      };
       reporter.request(null, request);
       expect(reporter.context.currentItem.data).toEqual(request);
     });
