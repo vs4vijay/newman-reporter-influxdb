@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/vs4vijay/newman-reporter-influxdb#readme",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.3"
   }
 }
