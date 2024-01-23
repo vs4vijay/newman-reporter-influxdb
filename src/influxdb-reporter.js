@@ -93,10 +93,10 @@ class InfluxDBReporter {
       request_name: item.name,
       url: request.url.toString(),
       method: request.method,
-      status: args.response.status,
-      code: args.response.code,
-      response_time: args.response.responseTime,
-      response_size: args.response.responseSize,
+      status: args.response ? args.response.status : 'No Response',
+      code: args.response ? args.response.code : 0,
+      response_time: args.response ? args.response.responseTime : 0,
+      response_size: args.response ? args.response.responseSize : 0,
       test_status: 'PASS',
       assertions: 0,
       failed_count: 0,
@@ -127,6 +127,9 @@ class InfluxDBReporter {
       this.context.currentItem.data.failed_count++;
       if (this.context.debug) {
         this.context.assertions.failed.push(failMessage);
+    if (!args.response) {
+      console.error('Response object is undefined. Unable to read response status.');
+    }
       }
     } else if(args.skipped) {
       if(this.context.currentItem.data.test_status !== 'FAIL') {
