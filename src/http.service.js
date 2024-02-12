@@ -85,6 +85,11 @@ class HttpService {
         u: this.context.username,
         p: this.context.password,
       };
+    } else if (this.context.version == 2) {
+      const params = {
+        bucket: this.context.name,
+        org: this.context.org,
+      };
       const paramsQuerystring = querystring.stringify(params);
       url = `/write?${paramsQuerystring}`;
     } else {
