@@ -13,10 +13,11 @@ class HttpService {
     };
 
     if(this.context.version == 2) {
-      // For InfluxDB version 2.x
-      axiosOptions.auth = {
-        username: this.context.username,
-        password: this.context.password,
+      // Setting Authorization header for API token-based authentication
+      if(this.context.apiToken) {
+        axiosOptions.headers = {
+          Authorization: `Token ${this.context.apiToken}`,
+        };
       }
     }
 
@@ -29,14 +30,19 @@ class HttpService {
 
   _buildInfluxDBUrl(path='write') {
     const url = `http://${this.context.server}:${this.context.port}/${path}`;
-    const params = {
-      db: this.context.name,
-      u: this.context.username,
-      p: this.context.password,
-    };
-
+    let params = {};
+    if(this.context.version == 1 && this.context.username && this.context.password) {
+      params = {
+        db: this.context.name,
+        u: this.context.username,
+        p: this.context.password,
+      };
+    } else if(this.context.version == 2) {
+      params = {
+        db: this.context.name
+      };
+    }
     const paramsQuerystring = querystring.stringify(params);
-
     const connectionUrl = `${url}?${paramsQuerystring}`;
     return connectionUrl;
   }
@@ -78,6 +84,11 @@ class HttpService {
         db: this.context.name,
         u: this.context.username,
         p: this.context.password,
+      };
+    } else if (this.context.version == 2) {
+      const params = {
+        bucket: this.context.name,
+        org: this.context.org,
       };
       const paramsQuerystring = querystring.stringify(params);
       url = `/write?${paramsQuerystring}`;
