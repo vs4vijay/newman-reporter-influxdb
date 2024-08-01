@@ -87,6 +87,11 @@ class InfluxDBReporter {
 
     console.log(`[${this.context.currentItem.index}] Running ${item.name}`);
 
+    if (!args.response) {
+      console.log(`[-] ERROR: Response is undefined for request ${item.name}`);
+      return;
+    }
+
     const data = {
       collection_name: this.options.collection.name, 
       id: this.context.identifier,
