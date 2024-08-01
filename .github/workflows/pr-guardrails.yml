@@ -2,15 +2,12 @@ name: PR Guardrails
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - develop
   pull_request:
     branches:
       - develop
 
 jobs:
-  build:
+  pr-guardrails:
     runs-on: ubuntu-latest
 
     steps:

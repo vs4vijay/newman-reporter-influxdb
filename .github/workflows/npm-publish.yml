@@ -1,12 +1,12 @@
 name: npm publish
 
-on:
-  # push:
-  #   branches:
-  #     - master
-  #     - develop
-  release:
-    types: [published]
+# on:
+#   # push:
+#   #   branches:
+#   #     - master
+#   #     - develop
+#   release:
+#     types: [published]
 
 jobs:
   build:
