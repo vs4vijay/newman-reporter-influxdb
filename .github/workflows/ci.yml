@@ -94,7 +94,7 @@ jobs:
         tree
 
     - name: Create Github Release ${{ needs.build.outputs.version }}
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         name: newman-reporter-influxdb-${{ needs.build.outputs.version }} Release
         tag_name: ${{ needs.build.outputs.version }}
