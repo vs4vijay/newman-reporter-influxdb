@@ -93,11 +93,11 @@ jobs:
         ls -all
         tree
 
-    - name: Create Release ${{ steps.version.outputs.version }}
+    - name: Create Github Release ${{ needs.build.outputs.version }}
       uses: softprops/action-gh-release@v1
       with:
-        name: newman-reporter-influxdb Release ${{ steps.version.outputs.version }}
-        tag_name: ${{ steps.version.outputs.version }}
+        name: newman-reporter-influxdb Release ${{ needs.build.outputs.version }}
+        tag_name: ${{ needs.build.outputs.version }}
         generate_release_notes: true
         files: |
           *.tgz
