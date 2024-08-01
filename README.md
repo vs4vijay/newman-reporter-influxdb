@@ -125,10 +125,16 @@ v2.0.0+ | v1.8, v2.x
 
 ## Development
 
-- `npm pack`
-- `npm i -g newman-reporter-<name>.<version>.tgz`
-- OR `make local-install`
-- `make test-v1` / `make test-v2`
+- Install Dependencies: `npm install`
+- To Install Local Package:
+  - `npm pack`
+  - `npm i -g newman-reporter-<name>.<version>.tgz`
+  - OR
+  - `make local-install`
+- Run Unit Tests:
+- Run Smoke Tests: 
+  - `make test-v1`
+  - `make test-v2`
 
 ---
 

@@ -161,7 +161,7 @@ class InfluxDBReporter {
 
   buildPayload(data) {
     const measurementName = this.context.measurement;
-
+    
     if(data.failed.length) {
       data.failed = data.failed.join(',');
     } else {
