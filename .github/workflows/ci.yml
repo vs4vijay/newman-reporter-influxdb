@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
     - name: Checkout repository
@@ -18,6 +20,15 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '20'
+    
+    - id: version
+      name: Get Version
+      run: |
+        set -x
+
+        VERSION=`npm view . version`
+
+        echo "version=${VERSION}" > $GITHUB_OUTPUT
 
     - name: Install dependencies
       run: |
@@ -53,7 +64,7 @@ jobs:
     - name: Upload to Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: newman-reporter-influxdb
+        name: newman-reporter-influxdb-${{ steps.version.outputs.version }}
         path: newman-reporter-influxdb-*.tgz
         if-no-files-found: error
 
@@ -64,14 +75,11 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
-    - id: version
-      name: Get Version
+    - name: Check Version
       run: |
         set -x
 
-        VERSION=`npm view . version`
-
-        echo "version=${VERSION}" > $GITHUB_OUTPUT
+        echo ${{ needs.build.outputs.version }}
 
     - uses: actions/download-artifact@v4
       with:
@@ -104,6 +112,11 @@ jobs:
         with:
           node-version: '20'
           registry-url: https://registry.npmjs.org/
+      - name: Check Version
+        run: |
+          set -x
+
+          echo ${{ needs.build.outputs.version }}
       # TODO: Remove once CI validated
       # - run: |
       #     LATEST=`npm view . version`
