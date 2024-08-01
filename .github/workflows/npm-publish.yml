@@ -1,12 +1,13 @@
 name: npm publish
 
-# on:
-#   # push:
-#   #   branches:
-#   #     - master
-#   #     - develop
-#   release:
-#     types: [published]
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - master
+  #     - develop
+  # release:
+  #   types: [published]
 
 jobs:
   build:
