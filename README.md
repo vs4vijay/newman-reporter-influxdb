@@ -211,4 +211,22 @@ docker run --name influxdb-1.7 -p 8086:8086 influxdb:1.7
 docker run --name influxdb-1.8 -p 8086:8086 influxdb:1.8
 docker run --name influxdb-2 -p 8086:8086 quay.io/influxdb/influxdb:v2.0.3
 
+
+steps:
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+  with:
+    node-version: '14.x'
+    registry-url: 'https://registry.npmjs.org'
+- run: npm ci
+- run: npm publish
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+- uses: actions/setup-node@v4
+  with:
+    registry-url: 'https://npm.pkg.github.com'
+- run: npm publish
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 ```
