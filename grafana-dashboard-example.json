@@ -1,0 +1,139 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Newman InfluxDB Dashboard",
+    "tags": [],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Response Time",
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 9
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "measurement": "api_results",
+            "groupBy": [
+              {
+                "type": "time",
+                "params": [
+                  "$__interval"
+                ]
+              }
+            ],
+            "select": [
+              [
+                {
+                  "type": "field",
+                  "params": [
+                    "response_time"
+                  ]
+                },
+                {
+                  "type": "mean",
+                  "params": []
+                }
+              ]
+            ],
+            "resultFormat": "time_series",
+            "orderByTime": "ASC",
+            "alias": "Response Time"
+          }
+        ],
+        "xaxis": {
+          "mode": "time",
+          "show": true
+        },
+        "yaxes": [
+          {
+            "format": "ms",
+            "show": true
+          },
+          {
+            "show": true
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "Test Results",
+        "gridPos": {
+          "x": 0,
+          "y": 9,
+          "w": 24,
+          "h": 9
+        },
+        "targets": [
+          {
+            "refId": "A",
+            "measurement": "api_results",
+            "groupBy": [],
+            "select": [
+              [
+                {
+                  "type": "field",
+                  "params": [
+                    "test_status"
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "field",
+                  "params": [
+                    "request_name"
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "field",
+                  "params": [
+                    "response_time"
+                  ]
+                }
+              ],
+              [
+                {
+                  "type": "field",
+                  "params": [
+                    "response_size"
+                  ]
+                }
+              ]
+            ],
+            "resultFormat": "table",
+            "orderByTime": "ASC",
+            "alias": "Test Results"
+          }
+        ],
+        "columns": [
+          {
+            "text": "Request Name",
+            "value": "request_name"
+          },
+          {
+            "text": "Status",
+            "value": "test_status"
+          },
+          {
+            "text": "Response Time",
+            "value": "response_time"
+          },
+          {
+            "text": "Response Size",
+            "value": "response_size"
+          }
+        ]
+      }
+    ]
+  }
+}

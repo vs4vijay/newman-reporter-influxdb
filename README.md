@@ -230,3 +230,28 @@ steps:
     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 ```
+
+---
+
+## Importing Example Grafana Dashboard
+
+To help you get started with visualizing your data in Grafana, we have provided an example Grafana dashboard JSON file. You can find this file in the repository as `grafana-dashboard-example.json`.
+
+### Steps to Import the Example Dashboard
+
+1. Open your Grafana instance and log in.
+2. Click on the "+" icon in the left sidebar and select "Import".
+3. In the "Import via panel json" section, click on "Upload JSON file".
+4. Select the `grafana-dashboard-example.json` file from the repository.
+5. Click on "Load".
+6. In the "Options" section, select the InfluxDB data source you have configured.
+7. Click on "Import".
+
+You should now see the example dashboard with panels for visualizing the data pushed to InfluxDB.
+
+### Customizing the Dashboard
+
+Feel free to customize the example dashboard to suit your needs. You can add more panels, change the queries, and adjust the visualizations as required.
+
+For more information on how to use Grafana, refer to the [Grafana documentation](https://grafana.com/docs/).
+
