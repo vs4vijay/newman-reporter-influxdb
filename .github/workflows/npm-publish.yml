@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 22
       - run: npm ci
 
   publish-npm:
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 22
           registry-url: https://registry.npmjs.org/
       - run: |
           LATEST=`npm view . version`
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 22
           registry-url: https://npm.pkg.github.com/
           scope: '@vs4vijay'
       # - run:  |
