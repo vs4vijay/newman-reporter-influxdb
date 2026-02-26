@@ -62,7 +62,7 @@ jobs:
         tree
     
     - name: Upload to Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: newman-reporter-influxdb-${{ steps.version.outputs.version }}
         path: newman-reporter-influxdb-*.tgz
@@ -81,7 +81,7 @@ jobs:
 
         echo ${{ needs.build.outputs.version }}
 
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v8
       with:
         merge-multiple: true
 
@@ -108,7 +108,7 @@ jobs:
     environment: npm_release
     steps:
       # - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           merge-multiple: true
       
@@ -139,7 +139,7 @@ jobs:
     environment: npm_release
     steps:
       # - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           merge-multiple: true
       
